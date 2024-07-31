@@ -1,0 +1,9 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.9
+  - pip=24.0
+  - pip:
+    - pandas
+    - fastq-dl

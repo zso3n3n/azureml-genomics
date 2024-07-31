@@ -1,0 +1,52 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+
+name: bwa
+display_name: BWA Alignment
+type: parallel
+compute: azureml:genomics-cluster
+inputs:
+  input_folder: 
+    type: uri_folder
+    mode: ro_mount
+  index_folder:
+    type: uri_folder
+    mode: ro_mount
+outputs:
+  bwa_output_folder:
+    type: uri_folder
+    mode: rw_mount
+  output_files:
+    type: uri_file
+    mode: rw_mount
+
+input_data: ${{inputs.input_folder}}
+mini_batch_size: "1"
+resources:
+    instance_count: 4
+max_concurrency_per_instance: 1
+
+logging_level: "DEBUG"
+mini_batch_error_threshold: 1
+
+retry_settings:
+  max_retries: 1
+  timeout: 10800
+
+task:
+  type: run_function
+  code: "./"
+  entry_script: bwa_mem.py
+  environment: azureml:bwa-env@latest
+  program_arguments: >-
+    --output_folder ${{outputs.bwa_output_folder}}
+    --ref_genome_index ${{inputs.index_folder}}
+    --cpu_threads 7
+    --model "none"
+    --error_threshold -1
+    --allowed_failed_percent 30
+    --task_overhead_timeout 9200
+    --progress_update_timeout 30000
+    --first_task_creation_timeout 600
+    --copy_logs_to_parent True
+    --resource_monitor_interval 150
+  append_row_to: ${{outputs.output_files}}

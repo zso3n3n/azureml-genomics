@@ -1,0 +1,13 @@
+name: genomics
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.9
+  - pip=24.0
+  - pip:
+    - python-dotenv
+    - azure-ai-ml
+    - pandas
+    - ipykernel
+    - fastq-dl

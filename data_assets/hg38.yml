@@ -1,0 +1,6 @@
+$schema: https://azuremlschemas.azureedge.net/latest/data.schema.json
+
+type: uri_file
+name: hg38
+description: "hg38 is the assembly of the human genome released December of 2013, that uses alternate or ALT contigs to represent common complex variation, including HLA loci. Alternate contigs were also present in past assemblies but not to the extent we see with GRCh38."
+path: https://hgdownload.soe.ucsc.edu/goldenpath/hg38/bigZips/hg38.fa.gz

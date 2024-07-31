@@ -3,7 +3,6 @@ type: command
 
 name: component_bwa_indexer
 display_name: BWA Indexer
-version: 1
 
 inputs:
   ref_genome:
@@ -13,7 +12,7 @@ outputs:
   ref_index_folder:
     type: uri_folder
 
-environment: azureml:bwa:5
+environment: azureml:bwa-env@latest
 
 command: >-
   fasta=`gunzip -l ${{inputs.ref_genome}} |tail -1 |tr -s ' '| cut -d ' ' -f 5` &&

@@ -34,9 +34,9 @@ retry_settings:
 
 task:
   type: run_function
+  environment: azureml:bwa-env:14
   code: "./"
-  entry_script: bwa_mem.py
-  environment: azureml:bwa-env@latest
+  entry_script: bwa.py
   program_arguments: >-
     --output_folder ${{outputs.bwa_output_folder}}
     --ref_genome_index ${{inputs.index_folder}}

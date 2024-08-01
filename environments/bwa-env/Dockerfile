@@ -1,20 +1,19 @@
-FROM mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04
+FROM mcr.microsoft.com/azureml/openmpi4.1.0-cuda11.8-cudnn8-ubuntu22.04:20240712.v1
 
-ENV AZUREML_CONDA_ENVIRONMENT_PATH /azureml-envs/tensorflow-2.7
+WORKDIR /
+
+ENV CONDA_PREFIX=/azureml-envs/tensorflow-2.16-cuda11
+ENV CONDA_DEFAULT_ENV=$CONDA_PREFIX
+ENV PATH=$CONDA_PREFIX/bin:$PATH
+
 # Create conda environment
-RUN conda create -p $AZUREML_CONDA_ENVIRONMENT_PATH \
-    python=3.8 pip=20.2.4
+COPY conda_dependencies.yml .
+RUN conda env create -p $CONDA_PREFIX -f conda_dependencies.yml -q && \
+    rm conda_dependencies.yml && \
+    conda run -p $CONDA_PREFIX pip cache purge && \
+    conda clean -a -y
 
-# Prepend path to AzureML conda environment
-ENV PATH $AZUREML_CONDA_ENVIRONMENT_PATH/bin:$PATH
-
-# Install pip dependencies
-RUN pip install --use-feature=2020-resolver \
-                                          'azureml-core' \
-                                          'azureml-defaults' \
-                                          'azureml-mlflow' \
-                                          'azureml-telemetry' \
-                                          'debugpy'
+RUN conda run -p $CONDA_PREFIX
                           
 # This is needed for mpi to locate libpython
 ENV LD_LIBRARY_PATH $AZUREML_CONDA_ENVIRONMENT_PATH/lib:$LD_LIBRARY_PATH
@@ -25,8 +24,8 @@ RUN apt-get update
 RUN apt-get install -y bwa samtools
 
 # Use precompiled binaries (recommended)
-#RUN curl -L https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.0pre2/bwa-mem2-2.0pre2_x64-linux.tar.bz2 \
-#  | tar jxf -
+RUN curl -L https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.0pre2/bwa-mem2-2.0pre2_x64-linux.tar.bz2 \
+  | tar jxf -
 
 #RUN ln -s bwa-mem2-2.0pre2_x64-linux/bwa-mem2 /usr/bin/bwa-mem2
 # usage:

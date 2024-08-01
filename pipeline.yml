@@ -20,6 +20,8 @@ jobs:
     outputs:
       output_folder:
         type: uri_folder
+        name: seq_quality_output
+        version: 1
         mode: rw_mount
       output_files:
         type: uri_file
@@ -36,6 +38,7 @@ jobs:
     outputs:
       ref_index_folder:
         type: uri_folder
+        path: azureml://datastores/workspaceblobstore/paths/bwa_index_output/
         mode: rw_mount
 
   bwa:
@@ -53,6 +56,7 @@ jobs:
     outputs:
       bwa_output_folder:
         type: uri_folder
+        name: bwa_output
         mode: rw_mount
       output_files:
         type: uri_file
